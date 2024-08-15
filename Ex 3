@@ -1,0 +1,54 @@
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+from scipy.stats import norm
+
+# Create a synthetic dataset
+np.random.seed(42)  # For reproducibility
+data = {
+    'Attribute1': np.random.normal(loc=50, scale=10, size=100),  # Normal distribution
+    'Attribute2': np.random.randint(1, 100, 100),  # Random integers
+    'Attribute3': np.random.uniform(10, 20, 100)   # Uniform distribution
+}
+
+df = pd.DataFrame(data)
+
+# Display basic info about the dataset
+print("Dataset Information:")
+print(df.info())
+
+# Loop through each attribute/column in the dataset
+for column in df.columns:
+    print(f"\nAnalysis of Attribute: {column}")
+    
+    # Count the total number of records based on unique values
+    value_counts = df[column].value_counts()
+    print(f"\nValue Counts:\n{value_counts}")
+    
+    # Calculate mean and standard deviation
+    mean = df[column].mean()
+    std_dev = df[column].std()
+    print(f"Mean: {mean}, Standard Deviation: {std_dev}")
+    
+    # Plot the Normal Distribution
+    plt.figure(figsize=(10, 5))
+    plt.hist(df[column], bins=30, density=True, alpha=0.6, color='g', edgecolor='black')
+    
+    # Plot normal distribution line
+    xmin, xmax = plt.xlim()
+    x = np.linspace(xmin, xmax, 100)
+    p = norm.pdf(x, mean, std_dev)
+    plt.plot(x, p, 'k', linewidth=2)
+    
+    plt.title(f'Normal Distribution of {column}')
+    plt.xlabel(column)
+    plt.ylabel('Density')
+    plt.show()
+    
+    # Plot Histogram
+    plt.figure(figsize=(10, 5))
+    plt.hist(df[column], bins=30, color='blue', edgecolor='black')
+    plt.title(f'Histogram of {column}')
+    plt.xlabel(column)
+    plt.ylabel('Frequency')
+    plt.show()
